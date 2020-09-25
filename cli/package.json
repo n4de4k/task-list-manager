@@ -4,11 +4,15 @@
   "description": "CLI base application to manage task list",
   "main": "./cmd/index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha --reporter spec"
   },
   "author": "Leo Nadeak",
   "license": "ISC",
   "bin": {
     "tasklist": "./cmd/index.js"
+  },
+  "dependencies": {
+    "chai": "^4.2.0",
+    "mocha": "^8.1.3"
   }
 }
