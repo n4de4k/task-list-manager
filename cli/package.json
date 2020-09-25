@@ -1,0 +1,14 @@
+{
+  "name": "tasklist-cli",
+  "version": "1.0.0",
+  "description": "CLI base application to manage task list",
+  "main": "./cmd/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Leo Nadeak",
+  "license": "ISC",
+  "bin": {
+    "tasklist": "./cmd/index.js"
+  }
+}
