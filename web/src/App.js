@@ -140,10 +140,14 @@ function App() {
             <div key={key} className="task-item">
               <span className="task-content">{task.content}</span>
               <span className="task-tag">
-                {task.tags ? task.tags.join(", ") : ""}
+                Tag: {task.tags ? task.tags.join(", ") : ""}
               </span>
-              <span className="task-created">{task.created_at}</span>
-              <span className="task-status">
+              <span className="task-created">
+                {new Date(task.created_at).toLocaleString()}
+              </span>
+              <span
+                className={`task-status ${task.status ? "done" : "not-done"}`}
+              >
                 {task.status ? "Done" : "In Progress"}
               </span>
               <div className="task-action">

@@ -63,3 +63,30 @@ label {
   font-size: 10px;
   color: #47463f;
 }
+
+.task-tag {
+  font-size: 11px;
+  color: #ababab;
+}
+
+.task-created {
+  font-size: 10px;
+  color: #888888
+}
+
+.task-content {
+  color: #252829;
+}
+
+.task-status {
+  font-size: 10px;
+}
+
+.not-done {
+  color: red;
+}
+
+.done {
+  color: green;
+}
+
