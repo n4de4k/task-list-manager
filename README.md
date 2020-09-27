@@ -33,3 +33,8 @@ To test, run: `npm run test`
 Or you can run development mode:
 1. Run: `npm start`
 2. Access `localhost:3000`
+
+Or You can use docker:
+1. build: `docker build -t web .`
+2. run: `docker run -it --rm -p <you port>:80 web`
+3. access: `localhost:<your port>`
