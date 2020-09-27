@@ -11,6 +11,10 @@ body {
   justify-content: center;
 }
 
+.sync-container {
+  display: flex;
+  justify-content: flex-end;
+}
 
 form {
   display: flex;
@@ -42,6 +46,10 @@ button.info {
   background: #edce34;
 }
 
+button.alert {
+  background:#18b4db;
+}
+
 .task-item {
   display: flex;
   flex-direction: column;
@@ -49,4 +57,9 @@ button.info {
   border-radius: 6px;
   border: solid 1px #888888;
   padding: 8px 12px;
+}
+
+label {
+  font-size: 10px;
+  color: #47463f;
 }

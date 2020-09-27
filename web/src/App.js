@@ -61,7 +61,6 @@ function App() {
   );
 
   const onSave = useCallback(async () => {
-    return;
     const id = Uuid();
     await TaskStore.addItemWithId(id, {
       ...form,
@@ -71,15 +70,34 @@ function App() {
     });
   }, [form]);
 
+  const onSync = useCallback(async () => {
+    const unsynced = TaskStore.countUnuploadeds();
+    if (unsynced === 0) {
+      window.alert("No data need to be synced");
+      return;
+    }
+    if (window.confirm(`Are you sure to sync ${unsynced} data?`)) {
+      await TaskStore.upload();
+      window.alert(`${unsynced} data successfully synced`);
+    }
+  }, []);
+
   return (
     <div className="container">
+      <div className="sync-container">
+        <button className="alert" onClick={onSync}>
+          Sync
+        </button>
+      </div>
       <form onSubmit={onSave}>
+        <label>Content</label>
         <input
           name="content"
           onChange={({ target: { name, value } }) => {
             onChangeForm(name, value);
           }}
         />
+        <label>Tags</label>
         <input
           name="tags"
           onChange={({ target: { name, value } }) => {

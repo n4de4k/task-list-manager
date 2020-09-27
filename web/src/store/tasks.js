@@ -21,8 +21,8 @@ class TaskStore extends PouchyStore {
 
   sortData() {
     return this.data.sort((one, two) => {
-      const oneTs = one.createdAt;
-      const twoTs = two.createdAt;
+      const oneTs = one.created_at;
+      const twoTs = two.created_at;
       if (oneTs > twoTs) return -1;
       if (oneTs < twoTs) return 1;
       return 0;
