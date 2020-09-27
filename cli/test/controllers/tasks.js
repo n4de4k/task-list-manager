@@ -16,7 +16,7 @@ describe("Task Controller", () => {
     const controller = new TasksController(DataComponent);
     const newData = {
       content: "example of tags",
-      tags: ["work", "routine"],
+      tags: "work,routine",
     };
 
     const res = await controller.store(newData);
@@ -29,7 +29,7 @@ describe("Task Controller", () => {
     const controller = new TasksController(DataComponent);
     await controller.store({
       content: "example of task update test-1",
-      tags: ["work", "routine"],
+      tags: "work,routine",
     });
 
     const dummID = Uuid();
@@ -45,7 +45,7 @@ describe("Task Controller", () => {
     const controller = new TasksController(DataComponent);
     const newTask = await controller.store({
       content: "example of task update test-2",
-      tags: ["work", "routine"],
+      tags: "work,routine",
     });
 
     await expect(
@@ -59,7 +59,7 @@ describe("Task Controller", () => {
     const controller = new TasksController(DataComponent);
     await controller.store({
       content: "example of task delete test-1",
-      tags: ["work", "routine"],
+      tags: "work,routine",
     });
 
     const dummID = Uuid();
@@ -73,7 +73,7 @@ describe("Task Controller", () => {
     const controller = new TasksController(DataComponent);
     const newTask = await controller.store({
       content: "example of task delete test 2",
-      tags: ["work", "routine"],
+      tags: "work,routine",
     });
 
     await expect(controller.delete(newTask._id)).to.be.not.rejected;
