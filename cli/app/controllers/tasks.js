@@ -65,9 +65,6 @@ class TaskController {
   }
 
   async sync() {
-    if (this.countUnsynced() === 0) {
-      throw new Error("No data need to be synced");
-    }
     await this.taskAccessor.upload();
   }
 }
