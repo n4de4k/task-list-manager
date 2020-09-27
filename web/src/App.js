@@ -19,13 +19,24 @@ function App() {
     [form]
   );
 
-  useMemo(async () => {
+  const onRefresh = useCallback(async () => {
     if (!TaskStore.isInitialized) {
       await TaskStore.initialize();
     }
 
-    setTasks(TaskStore.sortData());
+    setTasks(
+      TaskStore.sortData().map((item) => {
+        item.isSynced = TaskStore.checkIsUploaded({
+          _id: item._id,
+        });
+
+        return item;
+      })
+    );
   }, []);
+  useMemo(() => {
+    onRefresh();
+  }, [onRefresh]);
 
   const deleteTask = useCallback(
     (id) => async () => {
@@ -65,33 +76,47 @@ function App() {
     [tasks]
   );
 
-  const onSave = useCallback(async () => {
-    if (updatedTaskID === null) {
-      const id = Uuid();
-      const newData = {
-        ...form,
-        tags: form.tags.split(","),
-        created_at: new Date(),
-        status: false,
-      };
-    } else {
-      const task = tasks[updatedTaskID];
-      const updateData = {
-        ...form,
-        tags: form.tags.split(","),
-      };
-      await TaskStore.editItem(task._id, updateData);
+  const onSave = useCallback(
+    async (e) => {
+      e.preventDefault();
+      if (updatedTaskID === null) {
+        const id = Uuid();
+        const newData = {
+          ...form,
+          tags: form.tags.split(","),
+          created_at: new Date(),
+          status: false,
+        };
 
-      const newTask = [...tasks];
-      newTask[updatedTaskID] = {
-        ...newTask[updatedTaskID],
-        ...updateData,
-      };
+        await TaskStore.addItemWithId(id, newData);
 
-      setTasks(newTask);
-    }
-    setForm({});
-  }, [form, tasks, updatedTaskID]);
+        setTasks([
+          {
+            ...newData,
+            _id: id,
+          },
+          ...tasks,
+        ]);
+      } else {
+        const task = tasks[updatedTaskID];
+        const updateData = {
+          ...form,
+          tags: form.tags.split(","),
+        };
+        await TaskStore.editItem(task._id, updateData);
+
+        const newTask = [...tasks];
+        newTask[updatedTaskID] = {
+          ...newTask[updatedTaskID],
+          ...updateData,
+        };
+
+        setTasks(newTask);
+      }
+      setForm({});
+    },
+    [form, tasks, updatedTaskID]
+  );
 
   const onSync = useCallback(async () => {
     const unsynced = TaskStore.countUnuploadeds();
@@ -101,9 +126,15 @@ function App() {
     }
     if (window.confirm(`Are you sure to sync ${unsynced} data?`)) {
       await TaskStore.upload();
+      setTasks([
+        ...tasks.map((task) => ({
+          ...task,
+          isSynced: true,
+        })),
+      ]);
       window.alert(`${unsynced} data successfully synced`);
     }
-  }, []);
+  }, [tasks]);
 
   return (
     <div className="container">
@@ -136,9 +167,6 @@ function App() {
       </form>
       {tasks.map((task, key) => {
         if (!!task._id) {
-          const isSynced = TaskStore.checkIsUploaded({
-            _id: task._id,
-          });
           return (
             <div key={key} className="task-item">
               <span className="task-content">{task.content}</span>
@@ -150,9 +178,11 @@ function App() {
               </span>
               <div>
                 <span
-                  className={`task-status ${isSynced ? "done" : "not-done"}`}
+                  className={`task-status ${
+                    task.isSynced ? "done" : "not-done"
+                  }`}
                 >
-                  {isSynced ? "Synced" : "Not Synced"}
+                  {task.isSynced ? "Synced" : "Not Synced"}
                 </span>
                 ,
                 <span
