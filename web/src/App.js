@@ -134,9 +134,12 @@ function App() {
         />
         <button type="submit">Simpan</button>
       </form>
-      {tasks.map(
-        (task, key) =>
-          !!task._id && (
+      {tasks.map((task, key) => {
+        if (!!task._id) {
+          const isSynced = TaskStore.checkIsUploaded({
+            _id: task._id,
+          });
+          return (
             <div key={key} className="task-item">
               <span className="task-content">{task.content}</span>
               <span className="task-tag">
@@ -145,11 +148,19 @@ function App() {
               <span className="task-created">
                 {new Date(task.created_at).toLocaleString()}
               </span>
-              <span
-                className={`task-status ${task.status ? "done" : "not-done"}`}
-              >
-                {task.status ? "Done" : "In Progress"}
-              </span>
+              <div>
+                <span
+                  className={`task-status ${isSynced ? "done" : "not-done"}`}
+                >
+                  {isSynced ? "Synced" : "Not Synced"}
+                </span>
+                ,
+                <span
+                  className={`task-status ${task.status ? "done" : "not-done"}`}
+                >
+                  {task.status ? "Done" : "In Progress"}
+                </span>
+              </div>
               <div className="task-action">
                 <button className="delete" onClick={deleteTask(key)}>
                   Delete
@@ -162,8 +173,11 @@ function App() {
                 <button onClick={updateTask(key)}>Update</button>
               </div>
             </div>
-          )
-      )}
+          );
+        } else {
+          return null;
+        }
+      })}
     </div>
   );
 }
