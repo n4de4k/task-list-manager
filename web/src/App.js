@@ -6,7 +6,7 @@ import TaskStore from "store/tasks";
 
 function App() {
   const [tasks, setTasks] = useState([]);
-  const [updatedTaskID, setUpdatedTaskID] = useState([]);
+  const [updatedTaskID, setUpdatedTaskID] = useState(null);
   const [form, setForm] = useState({});
 
   const onChangeForm = useCallback(
@@ -40,9 +40,14 @@ function App() {
 
   const updateTask = useCallback(
     (id) => () => {
+      const task = tasks[id];
       setUpdatedTaskID(id);
+      setForm({
+        content: task.content,
+        tags: task.tags.join(","),
+      });
     },
-    []
+    [tasks]
   );
 
   const finishTask = useCallback(
@@ -61,14 +66,32 @@ function App() {
   );
 
   const onSave = useCallback(async () => {
-    const id = Uuid();
-    await TaskStore.addItemWithId(id, {
-      ...form,
-      tags: form.tags.split(","),
-      created_at: new Date(),
-      status: false,
-    });
-  }, [form]);
+    if (updatedTaskID === null) {
+      const id = Uuid();
+      const newData = {
+        ...form,
+        tags: form.tags.split(","),
+        created_at: new Date(),
+        status: false,
+      };
+    } else {
+      const task = tasks[updatedTaskID];
+      const updateData = {
+        ...form,
+        tags: form.tags.split(","),
+      };
+      await TaskStore.editItem(task._id, updateData);
+
+      const newTask = [...tasks];
+      newTask[updatedTaskID] = {
+        ...newTask[updatedTaskID],
+        ...updateData,
+      };
+
+      setTasks(newTask);
+    }
+    setForm({});
+  }, [form, tasks, updatedTaskID]);
 
   const onSync = useCallback(async () => {
     const unsynced = TaskStore.countUnuploadeds();
@@ -90,16 +113,21 @@ function App() {
         </button>
       </div>
       <form onSubmit={onSave}>
+        {updatedTaskID !== null && (
+          <label>Update Task with ID: {tasks[updatedTaskID]._id}</label>
+        )}
         <label>Content</label>
         <input
           name="content"
           onChange={({ target: { name, value } }) => {
             onChangeForm(name, value);
           }}
+          value={form.content}
         />
         <label>Tags</label>
         <input
           name="tags"
+          value={form.tags}
           onChange={({ target: { name, value } }) => {
             onChangeForm(name, value);
           }}
