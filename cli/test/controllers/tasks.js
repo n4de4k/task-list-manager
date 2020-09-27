@@ -78,4 +78,18 @@ describe("Task Controller", () => {
 
     await expect(controller.delete(newTask._id)).to.be.not.rejected;
   });
+
+  it("should sync task", async () => {
+    const controller = new TasksController(DataComponent);
+    await controller.store({
+      content: "example of task sync task",
+      tags: "work",
+    });
+
+    expect(controller.countUnsynced()).to.greaterThan(0);
+
+    await controller.sync();
+
+    expect(controller.countUnsynced()).to.eq(0);
+  });
 });

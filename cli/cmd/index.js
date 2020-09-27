@@ -1,4 +1,6 @@
 #!/usr/bin/env node
 require = require("esm")(module /*, options*/);
+global.btoa = require("btoa");
+global.fetch = require("node-fetch");
 
-console.log("You run this as command line");
+require("./main");

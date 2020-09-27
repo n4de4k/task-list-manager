@@ -6,6 +6,9 @@ class TaskController {
   }
 
   async store({ content, tags: tagsStr }) {
+    if (!content) {
+      throw new Error("Task content is required");
+    }
     if (!tagsStr) {
       throw new Error("tags required to create new tasks, e.g: work,routine");
     }
@@ -55,6 +58,17 @@ class TaskController {
 
   checkId(id) {
     return this.taskAccessor.checkIdExist(id);
+  }
+
+  countUnsynced() {
+    return this.taskAccessor.countUnuploadeds();
+  }
+
+  async sync() {
+    if (this.countUnsynced() === 0) {
+      throw new Error("No data need to be synced");
+    }
+    await this.taskAccessor.upload();
   }
 }
 
