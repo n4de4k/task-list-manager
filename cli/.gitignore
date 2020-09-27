@@ -1,2 +1,5 @@
 node_modules/
 package-lock.json
+
+my_tasks/
+meta_my_tasks/
