@@ -18,6 +18,16 @@ class TaskStore extends PouchyStore {
       },
     };
   }
+
+  sortData() {
+    return this.data.sort((one, two) => {
+      const oneTs = one.createdAt;
+      const twoTs = two.createdAt;
+      if (oneTs > twoTs) return -1;
+      if (oneTs < twoTs) return 1;
+      return 0;
+    });
+  }
 }
 
 export default new TaskStore();

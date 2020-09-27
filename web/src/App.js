@@ -24,7 +24,7 @@ function App() {
       await TaskStore.initialize();
     }
 
-    setTasks(TaskStore.data);
+    setTasks(TaskStore.sortData());
   }, []);
 
   const deleteTask = useCallback(
@@ -61,6 +61,7 @@ function App() {
   );
 
   const onSave = useCallback(async () => {
+    return;
     const id = Uuid();
     await TaskStore.addItemWithId(id, {
       ...form,
@@ -99,15 +100,17 @@ function App() {
               <span className="task-status">
                 {task.status ? "Done" : "In Progress"}
               </span>
-              <button className="task-delete" onClick={deleteTask(key)}>
-                Delete
-              </button>
-              <button className="task-finish" onClick={finishTask(key)}>
-                Finish Task
-              </button>
-              <button classname="task-update" onClick={updateTask(key)}>
-                Update
-              </button>
+              <div className="task-action">
+                <button className="delete" onClick={deleteTask(key)}>
+                  Delete
+                </button>
+                {!task.status && (
+                  <button className="info" onClick={finishTask(key)}>
+                    Finish Task
+                  </button>
+                )}
+                <button onClick={updateTask(key)}>Update</button>
+              </div>
             </div>
           )
       )}
