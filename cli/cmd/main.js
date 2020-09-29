@@ -49,7 +49,7 @@ const run = async () => {
         (task, id) =>
           `${task.content} \nTag: ${task.tags.join(
             ", "
-          )})\nCreated At: ${moment(task.created_at).format(
+          )}\nCreated At: ${moment(task.created_at).format(
             "YYYY-MM-DD HH:mm:ss"
           )}`
       )
