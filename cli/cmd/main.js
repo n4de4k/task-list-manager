@@ -44,7 +44,6 @@ const run = async () => {
 
   if (options.list !== undefined) {
     const tasks = taskController.getAllTask();
-    console.log(tasks);
     const display = tasks
       .map(
         (task, id) =>
